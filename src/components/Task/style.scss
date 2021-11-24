@@ -1,0 +1,21 @@
+.task__Container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+  background: #faf7f7;
+  border-radius: 3px;
+  padding: 1em 1em 1em 1em;
+  margin: 1em 0em 1em 0;
+}
+.task {
+  color: #8d4040;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+}
+
+.checkbox {
+  margin-left: 23px;
+}
