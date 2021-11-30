@@ -4,7 +4,7 @@ import { useAppSelector } from "store";
 import "./style.scss";
 
 const Main = () => {
-  const selector = useAppSelector((state) => state.todos);
+  const todos = useAppSelector((state) => state.todos);
 
   return (
     <div className="main">
@@ -14,10 +14,8 @@ const Main = () => {
           <h1>asdsad</h1>
         </div>
         <div className="main__Todos">
-          {selector.map((todo, key) => (
-            <Task isCompleted={todo.completed} id={todo.id} key={key}>
-              {todo.name}
-            </Task>
+          {todos.map((todo, key) => (
+            <Task todo={todo} key={key} />
           ))}
         </div>
         <div className="main__AddTask">

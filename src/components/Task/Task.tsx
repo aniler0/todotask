@@ -2,21 +2,22 @@ import { useRef, useState } from "react";
 import useDoubleClick from "use-double-click";
 
 import { useAppDispatch, useAppSelector } from "store";
-import { updateTodo } from "store/todoSlice";
+import { Todo, updateTask } from "store/todoSlice";
 
 import Complete from "assets/Complete";
 
 import "./style.scss";
-import { Input } from "components";
 
 type TaskType = {
-  children?: string;
-  id: string;
-  isCompleted: boolean;
+  todo: Todo;
 };
 
-const Task = ({ children, id, isCompleted }: TaskType) => {
+const Task = ({ todo }: TaskType) => {
+  const dispatch = useAppDispatch();
+  const todos = useAppSelector((state) => state.todos);
   const inputRef = useRef(null);
+  const [task, setTask] = useState<string>(todo.name);
+  const [isToggle, setisToggle] = useState<boolean>(false);
   const [isDoubleClicked, setIsDoubleClicked] = useState<boolean>(false);
 
   useDoubleClick({
@@ -27,19 +28,37 @@ const Task = ({ children, id, isCompleted }: TaskType) => {
     latency: 250,
   });
 
-  const dispatch = useAppDispatch();
-  const toggle = () => {
-    dispatch(updateTodo({ id }));
+  const handleSubmit = (e: any) => {
+    const newTodo = { ...todo, name: task };
+    e.preventDefault();
+    if (task) {
+      dispatch(updateTask(todos, newTodo));
+      setIsDoubleClicked(false);
+    }
   };
+
+  const toggle = () => {
+    const newTodo = { ...todo, completed: !todo.completed };
+    dispatch(updateTask(todos, newTodo));
+    setisToggle(!isToggle);
+  };
+
   return (
     <div ref={inputRef} className="task__Container">
       {isDoubleClicked ? (
-        <Input id={id} edit placeholder="Edit task" />
+        <form onSubmit={handleSubmit}>
+          <input
+            autoFocus
+            placeholder="Edit task"
+            value={task}
+            onChange={(e) => setTask(e.currentTarget.value)}
+          />
+        </form>
       ) : (
-        <h1 className="task">{children}</h1>
+        <h1 className="task">{task}</h1>
       )}
 
-      {isCompleted ? (
+      {isToggle ? (
         <div className="checked" onClick={toggle}>
           <Complete />
         </div>

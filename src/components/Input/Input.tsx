@@ -1,32 +1,21 @@
 import { useState } from "react";
 
 import { useAppDispatch } from "store";
-import { addTodo, UpdatedTask, updateTodo } from "store/todoSlice";
+import { addTask } from "store/todoSlice";
 
 import "./style.scss";
 
 type InputType = {
-  children?: string;
   placeholder: string;
-  edit?: boolean;
-  id?: string;
 };
 
-const Input = ({ placeholder, edit, id }: InputType) => {
+const Input = ({ placeholder }: InputType) => {
   const dispatch = useAppDispatch();
   const [todo, setTodo] = useState("");
-  const updatedTask: UpdatedTask = {
-    id: id,
-    name: todo,
-  };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    if (edit) {
-      dispatch(updateTodo(updatedTask));
-    } else {
-      dispatch(addTodo(todo));
-    }
+    dispatch(addTask(todo));
     setTodo("");
   };
   return (
