@@ -1,10 +1,18 @@
+import DatePicker from "react-datepicker";
+import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 import { Input, Task } from "components";
 import { useAppSelector } from "store";
-import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
+
+import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
+import { useState } from "react";
+import { monthNames } from "constants/months";
 
 const Main = () => {
   const todos = useAppSelector((state) => state.todos);
+  const [startDate, setStartDate] = useState(new Date());
+  const [datePickerShow, setDatePickerShow] = useState(false);
+
   const onDragEnd = (res: any) => {
     if (!res.destination) return;
   };
@@ -12,8 +20,26 @@ const Main = () => {
     <div className="main">
       <div className="main__Container">
         <div className="main__Date">
-          <h1>sad</h1>
-          <h1>asdsad</h1>
+          {datePickerShow ? (
+            <DatePicker
+              selected={startDate}
+              dateFormat="d MMMM yyyy"
+              inline
+              onChange={(date: any) => {
+                setStartDate(date);
+                console.log(startDate);
+                setDatePickerShow(false);
+              }}
+            />
+          ) : (
+            <div className="date" onClick={() => setDatePickerShow(true)}>
+              <div className="day">{startDate.getUTCDate()}</div>
+              <div className="month-year">
+                <span>{monthNames[startDate.getMonth()]}</span>
+                <span>{startDate.getUTCFullYear()}</span>
+              </div>
+            </div>
+          )}
         </div>
 
         <DragDropContext onDragEnd={onDragEnd}>
@@ -43,7 +69,7 @@ const Main = () => {
           </Droppable>
         </DragDropContext>
         <div className="main__AddTask">
-          <Input placeholder="+New Task" />
+          <Input placeholder="+New" />
         </div>
       </div>
     </div>

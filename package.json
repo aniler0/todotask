@@ -14,6 +14,7 @@
     "node-sass": "4.14.1",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
+    "react-datepicker": "^4.4.0",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "react-scripts": "4.0.3",
@@ -49,6 +50,7 @@
   "devDependencies": {
     "@types/node-sass": "^4.11.2",
     "@types/react-beautiful-dnd": "^13.1.2",
+    "@types/react-datepicker": "^4.3.2",
     "@types/use-double-click": "^1.0.1",
     "@types/uuid": "^8.3.3"
   }
