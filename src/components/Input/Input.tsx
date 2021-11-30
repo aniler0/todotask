@@ -1,21 +1,22 @@
 import { useState } from "react";
 
 import { useAppDispatch } from "store";
-import { addTask } from "store/todoSlice";
+import { addTask, loadState } from "store/todoSlice";
 
 import "./style.scss";
 
 type InputType = {
   placeholder: string;
+  startDate: Date;
 };
 
-const Input = ({ placeholder }: InputType) => {
+const Input = ({ placeholder, startDate }: InputType) => {
   const dispatch = useAppDispatch();
   const [todo, setTodo] = useState("");
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    dispatch(addTask(todo));
+    dispatch(addTask(todo, startDate));
     setTodo("");
   };
   return (

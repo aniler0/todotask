@@ -8,8 +8,9 @@ export const store = configureStore({
   },
 });
 
-export type RootState = ReturnType<typeof store.getState>; //gets types from slices and combine all types inside of rootstate.
-export type AppDispatch = typeof store.dispatch; //type of dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
+
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

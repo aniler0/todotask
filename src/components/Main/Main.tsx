@@ -1,12 +1,13 @@
+import { useState } from "react";
 import DatePicker from "react-datepicker";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
-import { Input, Task } from "components";
+
 import { useAppSelector } from "store";
+import { Input, Task } from "components";
+import { monthNames } from "constants/months";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
-import { useState } from "react";
-import { monthNames } from "constants/months";
 
 const Main = () => {
   const todos = useAppSelector((state) => state.todos);
@@ -69,7 +70,7 @@ const Main = () => {
           </Droppable>
         </DragDropContext>
         <div className="main__AddTask">
-          <Input placeholder="+New" />
+          <Input placeholder="+New" startDate={startDate} />
         </div>
       </div>
     </div>

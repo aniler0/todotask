@@ -6,6 +6,7 @@ export interface Todo {
   id: string;
   name: string;
   completed: boolean;
+  date: Number;
 }
 
 const initialState: Todo[] = [];
@@ -16,10 +17,12 @@ const todoSlice = createSlice({
   reducers: {
     addTodo: (state, action: PayloadAction<Todo>) => {
       state.push(action.payload);
+      saveState(state);
     },
 
     setTodo: (state, action: PayloadAction<Todo[]>) => {
       state = action.payload;
+      saveState(state);
     },
   },
 });
@@ -27,17 +30,44 @@ const todoSlice = createSlice({
 export default todoSlice.reducer;
 export const { addTodo, setTodo } = todoSlice.actions;
 
-export const addTask = (task: string) => async (dispatch: AppDispatch) => {
-  const newTodo: Todo = { id: uuid(), name: task, completed: false };
-  dispatch(addTodo(newTodo));
-};
+export const addTask =
+  (task: string, startDate: Date) => async (dispatch: AppDispatch) => {
+    const newTodo: Todo = {
+      id: uuid(),
+      name: task,
+      completed: false,
+      date: startDate.getUTCDay(),
+    };
+    dispatch(addTodo(newTodo));
+  };
 
 export const updateTask =
   (todos: Todo[], task: Todo) => async (dispatch: AppDispatch) => {
     const newTodoState = [...todos];
-    const newTodo = newTodoState.map((todo) =>
-      todo.id === task.id ? { ...todo, name: task.name } : todo
-    );
+    newTodoState.forEach((todo, index) => {
+      if (todo.id === task.id) {
+        const todoToUpdate = { ...task };
+        newTodoState[index] = todoToUpdate;
+      }
+    });
 
-    dispatch(setTodo(newTodo));
+    dispatch(setTodo(newTodoState));
   };
+
+export async function saveState(state: any) {
+  try {
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem("state", serializedState);
+  } catch (e) {
+    // Ignore
+  }
+}
+export function loadState() {
+  try {
+    const serializedState = localStorage.getItem("state");
+    if (!serializedState) return undefined;
+    return JSON.parse(serializedState);
+  } catch (e) {
+    return undefined;
+  }
+}

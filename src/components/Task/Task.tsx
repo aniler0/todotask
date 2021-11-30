@@ -29,7 +29,7 @@ const Task = ({ todo }: TaskType) => {
   });
 
   const handleSubmit = (e: any) => {
-    const newTodo = { ...todo, name: task };
+    const newTodo = { ...todo, name: task, completed: isToggle };
     e.preventDefault();
     if (task) {
       dispatch(updateTask(todos, newTodo));
@@ -38,7 +38,7 @@ const Task = ({ todo }: TaskType) => {
   };
 
   const toggle = () => {
-    const newTodo = { ...todo, completed: !todo.completed };
+    const newTodo = { ...todo, completed: !isToggle };
     dispatch(updateTask(todos, newTodo));
     setisToggle(!isToggle);
   };
