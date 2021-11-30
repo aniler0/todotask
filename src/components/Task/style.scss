@@ -16,6 +16,20 @@
   line-height: 19px;
 }
 
-.checkbox {
-  margin-left: 23px;
+.checked {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 99px;
+  background: #d58282;
+  border: 1px solid #d58282;
+}
+.notChecked {
+  width: 24px;
+  height: 24px;
+  border-radius: 99px;
+  background: #ffffff;
+  border: 1px solid #f9e6e6;
 }

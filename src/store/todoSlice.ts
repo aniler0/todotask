@@ -17,9 +17,13 @@ const todoSlice = createSlice({
       const newTodo = { id: uuid(), name: action.payload, completed: false };
       state.push(newTodo);
     },
-    updateTodo: (state, action: PayloadAction<string>) => {},
+    updateTodo: (state, action: PayloadAction<string>) => {
+      return state.map((todo) =>
+        todo.id === action.payload.id ? (todo.completed = true) : todo
+      );
+    },
   },
 });
 
 export default todoSlice.reducer;
-export const { addTodo } = todoSlice.actions;
+export const { addTodo, updateTodo } = todoSlice.actions;
