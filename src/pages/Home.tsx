@@ -3,17 +3,17 @@ import DatePicker from "react-datepicker";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 
 import { Input } from "components";
-
 import { useAppSelector, useAppDispatch } from "store";
+import { monthNames } from "constants/dates";
+import { Todo, loadState, addTodo } from "store/todoSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "styles/home.scss";
-import { monthNames } from "constants/dates";
-import { Todo, loadState, addTodo, setTodo } from "store/todoSlice";
 
 const Home = () => {
   const todosSelector = useAppSelector((state) => state.todos);
   const dispatch = useAppDispatch();
+
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [datePickerShow, setDatePickerShow] = useState(false);
 
@@ -21,6 +21,7 @@ const Home = () => {
 
   useEffect(() => {
     if (loadState !== undefined) {
+      //if there is data in localstore checks and adds in redux state
       loadState()?.map((elm: Todo) => dispatch(addTodo(elm)));
     }
   }, []);
@@ -48,12 +49,20 @@ const Home = () => {
               }}
             />
           ) : (
-            <div className="date" onClick={() => setDatePickerShow(true)}>
-              <div className="day">{calendarDate.getDate()}</div>
-              <div className="month-year">
-                <span>{monthNames[calendarDate.getMonth()]}</span>
-                <span>{calendarDate.getFullYear()}</span>
+            <div className="dates">
+              <div className="date" onClick={() => setDatePickerShow(true)}>
+                <div className="day">{calendarDate.getDate()}</div>
+                <div className="month-year">
+                  <span>{monthNames[calendarDate.getMonth()]}</span>
+                  <span>{calendarDate.getFullYear()}</span>
+                </div>
               </div>
+
+              <h1 className="day__Text">
+                {calendarDate
+                  .toLocaleDateString("en-US", { weekday: "long" })
+                  .toLocaleUpperCase()}
+              </h1>
             </div>
           )}
         </div>
@@ -68,7 +77,7 @@ const Home = () => {
               >
                 {todosSelector
                   .filter(
-                    (filteredTodo: Todo) => filteredTodo.date === dateMonthYear
+                    (filteredTodo: Todo) => filteredTodo.date === dateMonthYear //if dates are equal lists tasks which date is equal with calendar
                   )
                   .map((todo: Todo, key: number) => (
                     <Draggable key={todo.id} draggableId={todo.id} index={key}>

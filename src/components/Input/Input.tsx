@@ -1,9 +1,9 @@
-import Complete from "assets/Complete";
 import { useRef, useState } from "react";
-
-import { useAppDispatch, useAppSelector } from "store";
-import { addTask, Todo, updateTask } from "store/todoSlice";
 import useDoubleClick from "use-double-click";
+
+import Complete from "assets/Complete";
+import { useAppDispatch, useAppSelector } from "store";
+import { addTask, setToggle, Todo, updateTodo } from "store/todoSlice";
 
 import "./style.scss";
 
@@ -15,18 +15,14 @@ type InputType = {
   todo?: Todo | undefined;
 };
 
-const Input = ({
-  placeholder,
-  calendarDate,
-  setTodos,
-  edit,
-  todo,
-}: InputType) => {
+const Input = ({ placeholder, calendarDate, edit, todo }: InputType) => {
   const todos = useAppSelector((state) => state.todos);
   const dispatch = useAppDispatch();
 
   const [taskName, setTaskName] = useState(todo ? todo.name : "");
-  const [isToggle, setisToggle] = useState<boolean>(false);
+  const [isToggle, setIsToggle] = useState<boolean>(
+    todo ? todo.completed : false
+  );
   const [isDoubleClicked, setIsDoubleClicked] = useState<boolean>(false);
   const inputRef = useRef(null);
 
@@ -34,26 +30,27 @@ const Input = ({
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    dispatch(addTask(taskName, dateMonthYear));
-    if (edit) {
+
+    if (edit && todo) {
+      const newTodo = { ...todo, name: taskName };
+      dispatch(updateTodo(newTodo));
       setIsDoubleClicked(!isDoubleClicked);
     } else {
+      dispatch(addTask(taskName, dateMonthYear));
       setTaskName("");
     }
   };
 
   const toggle = () => {
     if (todo !== undefined) {
-      const newTodo = { ...todo, completed: !todo.completed };
-      dispatch(updateTask(todos, newTodo));
+      dispatch(setToggle(todo.id));
     }
-    setisToggle(!isToggle);
+    setIsToggle(!isToggle);
   };
 
   useDoubleClick({
     onDoubleClick: (e) => {
       setIsDoubleClicked(!isDoubleClicked);
-      console.log("double");
     },
     ref: inputRef,
     latency: 250,
@@ -89,7 +86,7 @@ const Input = ({
       </form>
 
       {edit ? (
-        todo !== undefined && todo.completed ? (
+        todo !== undefined && isToggle ? (
           <div className="checked" onClick={toggle}>
             <Complete />
           </div>

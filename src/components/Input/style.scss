@@ -6,22 +6,22 @@
   background: #faf7f7;
   border-radius: 3px;
   padding: 1em 1em 1em 1em;
-}
-.input {
-  width: 100%;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 19px;
-  color: #8d4040;
-  outline: none;
-  border: none;
-  background: transparent;
-}
-::placeholder {
-  font-weight: normal;
-  font-size: 13px;
-  line-height: 19px;
-  color: #b08b8b;
+  .input {
+    width: 100%;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    color: #8d4040;
+    outline: none;
+    border: none;
+    background: transparent;
+  }
+  ::placeholder {
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 19px;
+    color: #b08b8b;
+  }
 }
 
 ////////////////////////@at-root

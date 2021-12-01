@@ -23,25 +23,39 @@
     }
     .main__Date {
       position: relative;
-      .date {
+
+      .dates {
+        width: 100%;
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
         align-items: center;
-        cursor: pointer;
-
-        .day {
-          font-size: 3em;
-          font-weight: 600;
-          color: #d48282;
-        }
-        .month-year {
+        .date {
           display: flex;
-          flex-direction: column;
-          color: #d48282;
+          flex-direction: row;
+          align-items: center;
+          cursor: pointer;
+
+          .day {
+            font-size: 3em;
+            font-weight: 600;
+            color: #d48282;
+          }
+          .month-year {
+            display: flex;
+            flex-direction: column;
+            color: #d48282;
+            font-size: 1em;
+            font-weight: 500;
+            line-height: 1.4em;
+            margin-left: 5px;
+          }
+        }
+
+        .day__Text {
           font-size: 1em;
-          font-weight: 500;
-          line-height: 1.4em;
-          margin-left: 5px;
+          font-weight: 700;
+          color: #d48282;
         }
       }
     }
