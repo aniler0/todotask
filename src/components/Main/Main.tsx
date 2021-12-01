@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 
-import { loadState, Todo } from "store/todoSlice";
 import { Input, Task } from "components";
+
+import { monthNames } from "constants/dates";
+import { useAppSelector } from "store";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
-import { monthNames } from "constants/dates";
 
 const Main = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const todos = useAppSelector((state) => state.todos);
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [datePickerShow, setDatePickerShow] = useState(false);
 
@@ -18,10 +19,6 @@ const Main = () => {
     if (!res.destination) return;
   };
   const dateMonthYear = `${calendarDate.getDate()}/${calendarDate.getMonth()}/${calendarDate.getFullYear()}`;
-
-  useEffect(() => {
-    setTodos(loadState());
-  }, [calendarDate]);
 
   return (
     <div className="main">
@@ -35,7 +32,6 @@ const Main = () => {
               onChange={(date: Date) => {
                 setCalendarDate(date);
                 setDatePickerShow(false);
-                setTodos(loadState());
               }}
             />
           ) : (
@@ -80,11 +76,7 @@ const Main = () => {
           </Droppable>
         </DragDropContext>
         <div className="main__AddTask">
-          <Input
-            placeholder="+ New"
-            calendarDate={calendarDate}
-            setTodos={setTodos}
-          />
+          <Input placeholder="+ New" calendarDate={calendarDate} />
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import useDoubleClick from "use-double-click";
 
 import { useAppDispatch, useAppSelector } from "store";
-import { Todo, updateTask } from "store/todoSlice";
+import { setToggle, Todo, updateTask } from "store/todoSlice";
 
 import Complete from "assets/Complete";
 
@@ -29,7 +29,7 @@ const Task = ({ todo }: TaskType) => {
   });
 
   const handleSubmit = (e: any) => {
-    const newTodo = { ...todo, name: task, completed: isToggle };
+    const newTodo = { ...todo, name: task };
     e.preventDefault();
     if (task) {
       dispatch(updateTask(todos, newTodo));
@@ -38,9 +38,7 @@ const Task = ({ todo }: TaskType) => {
   };
 
   const toggle = () => {
-    const newTodo = { ...todo, completed: !isToggle };
-    dispatch(updateTask(todos, newTodo));
-    setisToggle(!isToggle);
+    dispatch(setToggle(todo.id));
   };
 
   return (
@@ -58,17 +56,13 @@ const Task = ({ todo }: TaskType) => {
         <h1 className="task">{task}</h1>
       )}
 
-      {/*isToggle ? (
+      {todo.completed ? (
         <div className="checked" onClick={toggle}>
           <Complete />
         </div>
       ) : (
         <div className="notChecked" onClick={toggle}></div>
-      )*/}
-
-      <div className={isToggle ? `checked` : `notChecked`} onClick={toggle}>
-        {isToggle && <Complete />}
-      </div>
+      )}
     </div>
   );
 };

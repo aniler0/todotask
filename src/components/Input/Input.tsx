@@ -8,7 +8,7 @@ import "./style.scss";
 type InputType = {
   placeholder: string;
   calendarDate: Date;
-  setTodos: any;
+  setTodos?: any;
 };
 
 const Input = ({ placeholder, calendarDate, setTodos }: InputType) => {
@@ -19,7 +19,7 @@ const Input = ({ placeholder, calendarDate, setTodos }: InputType) => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     dispatch(addTask(todo, dateMonthYear));
-    setTodos(loadState());
+
     setTodo("");
   };
   return (

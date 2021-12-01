@@ -22,13 +22,19 @@ const todoSlice = createSlice({
 
     setTodo: (state, action: PayloadAction<Todo[]>) => {
       state = action.payload;
-      saveState(state);
+    },
+    setToggle: (state, action: PayloadAction<string>) => {
+      return state.map((todo) =>
+        todo.id === action.payload
+          ? { ...todo, completed: !todo.completed }
+          : todo
+      );
     },
   },
 });
 
 export default todoSlice.reducer;
-export const { addTodo, setTodo } = todoSlice.actions;
+export const { addTodo, setTodo, setToggle } = todoSlice.actions;
 
 export const addTask =
   (task: string, startDate: string) => async (dispatch: AppDispatch) => {
@@ -40,16 +46,12 @@ export const addTask =
     };
     dispatch(addTodo(newTodo));
   };
-
 export const updateTask =
   (todos: Todo[], task: Todo) => async (dispatch: AppDispatch) => {
     const newTodoState = [...todos];
+    newTodoState.map((todo, index) => (todo.id === task.id ? task : todo));
 
-    const newT = newTodoState.map((todoState) =>
-      todoState.id === task.id ? task : todoState
-    );
-
-    dispatch(setTodo(newT));
+    dispatch(setTodo(newTodoState));
   };
 
 export async function saveState(state: any) {
