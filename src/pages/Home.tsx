@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 
 import { Input, Task } from "components";
 
-import { monthNames } from "constants/dates";
 import { useAppSelector } from "store";
 
-import "react-datepicker/dist/react-datepicker.css";
-import "./style.scss";
+import { useState } from "react";
 
-const Main = () => {
+import "react-datepicker/dist/react-datepicker.css";
+import "styles/home.scss";
+import { monthNames } from "constants/dates";
+
+const Home = () => {
   const todos = useAppSelector((state) => state.todos);
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [datePickerShow, setDatePickerShow] = useState(false);
@@ -83,4 +84,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default Home;
