@@ -53,10 +53,6 @@ const Input = ({ placeholder, calendarDate, edit, todo }: InputType) => {
     setIsToggle(!isToggle);
   };
 
-  useEffect(() => {
-    saveState(selector);
-  });
-
   useDoubleClick({
     onDoubleClick: (e) => {
       setIsDoubleClicked(!isDoubleClicked);

@@ -5,7 +5,7 @@ import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 import { Input } from "components";
 import { useAppSelector, useAppDispatch } from "store";
 import { monthNames } from "constants/dates";
-import { Todo, loadState, addTodo } from "store/todoSlice";
+import { Todo, loadState, addTodo, saveState } from "store/todoSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "styles/home.scss";
@@ -26,6 +26,9 @@ const Home = () => {
     }
   }, []);
 
+  useEffect(() => {
+    saveState(todosSelector);
+  });
   function handleOnDragEnd(result: any) {
     if (todosSelector !== undefined) {
       const items = Array.from(todosSelector);
