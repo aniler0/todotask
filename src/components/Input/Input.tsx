@@ -63,6 +63,7 @@ const Input = ({ placeholder, calendarDate, edit, todo }: InputType) => {
         {edit ? (
           isDoubleClicked ? (
             <input
+              required
               autoFocus={isDoubleClicked}
               value={taskName}
               onChange={(e) => setTaskName(e.currentTarget.value)}
@@ -72,6 +73,7 @@ const Input = ({ placeholder, calendarDate, edit, todo }: InputType) => {
           )
         ) : (
           <input
+            required
             className="input"
             placeholder={placeholder}
             type="text"
