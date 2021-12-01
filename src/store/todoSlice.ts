@@ -22,7 +22,6 @@ const todoSlice = createSlice({
 
     setTodo: (state, action: PayloadAction<Todo[]>) => {
       state = action.payload;
-      console.log(action.payload);
       saveState(state);
     },
   },
@@ -44,16 +43,13 @@ export const addTask =
 
 export const updateTask =
   (todos: Todo[], task: Todo) => async (dispatch: AppDispatch) => {
-    console.log(task);
-    console.log(todos);
     const newTodoState = [...todos];
-    newTodoState.forEach((todo, index) => {
-      if (todo.id === task.id) {
-        // const todoToUpdate = { ...task };
-        newTodoState[index] = task;
-      }
-    });
-    dispatch(setTodo(newTodoState));
+
+    const newT = newTodoState.map((todoState) =>
+      todoState.id === task.id ? task : todoState
+    );
+
+    dispatch(setTodo(newT));
   };
 
 export async function saveState(state: any) {

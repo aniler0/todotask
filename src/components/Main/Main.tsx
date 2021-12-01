@@ -21,7 +21,7 @@ const Main = () => {
 
   useEffect(() => {
     setTodos(loadState());
-  }, []);
+  }, [calendarDate]);
 
   return (
     <div className="main">
