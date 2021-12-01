@@ -22,6 +22,7 @@ const todoSlice = createSlice({
 
     setTodo: (state, action: PayloadAction<Todo[]>) => {
       state = action.payload;
+      saveState(state);
     },
     setToggle: (state, action: PayloadAction<string>) => {
       return state.map((todo) =>
@@ -62,7 +63,7 @@ export async function saveState(state: any) {
     // Ignore
   }
 }
-export function loadState() {
+export const loadState = () => {
   try {
     const serializedState = localStorage.getItem("state");
     if (!serializedState) return undefined;
@@ -70,4 +71,4 @@ export function loadState() {
   } catch (e) {
     return undefined;
   }
-}
+};

@@ -1,25 +1,45 @@
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 
-import { Input, Task } from "components";
+import { Input } from "components";
 
-import { useAppSelector } from "store";
-
-import { useState } from "react";
+import { useAppSelector, useAppDispatch } from "store";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "styles/home.scss";
 import { monthNames } from "constants/dates";
+import { Todo, loadState, addTodo } from "store/todoSlice";
 
 const Home = () => {
-  const todos = useAppSelector((state) => state.todos);
+  const todosSelector = useAppSelector((state) => state.todos);
+  const dispatch = useAppDispatch();
+  const [todos, setTodos] = useState(todosSelector);
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [datePickerShow, setDatePickerShow] = useState(false);
 
-  const onDragEnd = (res: any) => {
-    if (!res.destination) return;
-  };
   const dateMonthYear = `${calendarDate.getDate()}/${calendarDate.getMonth()}/${calendarDate.getFullYear()}`;
+
+  useEffect(() => {
+    if (loadState !== undefined) {
+      loadState()?.map((elm: Todo) => dispatch(addTodo(elm)));
+    }
+  }, []);
+
+  const reorder = (list: Todo[], startIndex: number, endIndex: number) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+
+  function handleOnDragEnd(res: any) {
+    if (!res.destination) {
+      return;
+    }
+    const items = reorder(todos, res.source.index, res.destination.index);
+    setTodos(items);
+  }
 
   return (
     <div className="main">
@@ -46,7 +66,7 @@ const Home = () => {
           )}
         </div>
 
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="main__Todos">
             {(provided) => (
               <div
@@ -54,11 +74,11 @@ const Home = () => {
                 ref={provided.innerRef}
                 className="main__Todos"
               >
-                {todos
+                {loadState()
                   ?.filter(
-                    (filteredTodo) => filteredTodo.date === dateMonthYear
+                    (filteredTodo: Todo) => filteredTodo.date === dateMonthYear
                   )
-                  .map((todo, key) => (
+                  ?.map((todo: Todo, key: number) => (
                     <Draggable key={todo.id} draggableId={todo.id} index={key}>
                       {(provided) => (
                         <div
@@ -67,11 +87,12 @@ const Home = () => {
                           ref={provided.innerRef}
                           {...provided.draggableProps.style}
                         >
-                          <Task todo={todo} key={key} />
+                          <Input edit todo={todo} key={key} />
                         </div>
                       )}
                     </Draggable>
                   ))}
+                {provided.placeholder}
               </div>
             )}
           </Droppable>
