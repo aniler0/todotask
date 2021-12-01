@@ -9,12 +9,11 @@ import { useAppSelector, useAppDispatch } from "store";
 import "react-datepicker/dist/react-datepicker.css";
 import "styles/home.scss";
 import { monthNames } from "constants/dates";
-import { Todo, loadState, addTodo } from "store/todoSlice";
+import { Todo, loadState, addTodo, setTodo } from "store/todoSlice";
 
 const Home = () => {
   const todosSelector = useAppSelector((state) => state.todos);
   const dispatch = useAppDispatch();
-  const [todos, setTodos] = useState(todosSelector);
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [datePickerShow, setDatePickerShow] = useState(false);
 
@@ -26,19 +25,12 @@ const Home = () => {
     }
   }, []);
 
-  const reorder = (list: Todo[], startIndex: number, endIndex: number) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-  };
-
-  function handleOnDragEnd(res: any) {
-    if (!res.destination) {
-      return;
+  function handleOnDragEnd(result: any) {
+    if (todosSelector !== undefined) {
+      const items = Array.from(todosSelector);
+      const [reorderedItem] = items.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reorderedItem);
     }
-    const items = reorder(todos, res.source.index, res.destination.index);
-    setTodos(items);
   }
 
   return (
@@ -74,11 +66,11 @@ const Home = () => {
                 ref={provided.innerRef}
                 className="main__Todos"
               >
-                {loadState()
-                  ?.filter(
+                {todosSelector
+                  .filter(
                     (filteredTodo: Todo) => filteredTodo.date === dateMonthYear
                   )
-                  ?.map((todo: Todo, key: number) => (
+                  .map((todo: Todo, key: number) => (
                     <Draggable key={todo.id} draggableId={todo.id} index={key}>
                       {(provided) => (
                         <div
