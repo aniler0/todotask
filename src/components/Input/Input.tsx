@@ -7,16 +7,19 @@ import "./style.scss";
 
 type InputType = {
   placeholder: string;
-  startDate: Date;
+  calendarDate: Date;
+  setTodos: any;
 };
 
-const Input = ({ placeholder, startDate }: InputType) => {
+const Input = ({ placeholder, calendarDate, setTodos }: InputType) => {
   const dispatch = useAppDispatch();
   const [todo, setTodo] = useState("");
+  const dateMonthYear = `${calendarDate.getDate()}/${calendarDate.getMonth()}/${calendarDate.getFullYear()}`;
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    dispatch(addTask(todo, startDate));
+    dispatch(addTask(todo, dateMonthYear));
+    setTodos(loadState());
     setTodo("");
   };
   return (

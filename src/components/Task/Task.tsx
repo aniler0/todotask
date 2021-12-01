@@ -17,7 +17,7 @@ const Task = ({ todo }: TaskType) => {
   const todos = useAppSelector((state) => state.todos);
   const inputRef = useRef(null);
   const [task, setTask] = useState<string>(todo.name);
-  const [isToggle, setisToggle] = useState<boolean>(false);
+  const [isToggle, setisToggle] = useState<boolean>(todo.completed);
   const [isDoubleClicked, setIsDoubleClicked] = useState<boolean>(false);
 
   useDoubleClick({
@@ -58,13 +58,17 @@ const Task = ({ todo }: TaskType) => {
         <h1 className="task">{task}</h1>
       )}
 
-      {isToggle ? (
+      {/*isToggle ? (
         <div className="checked" onClick={toggle}>
           <Complete />
         </div>
       ) : (
         <div className="notChecked" onClick={toggle}></div>
-      )}
+      )*/}
+
+      <div className={isToggle ? `checked` : `notChecked`} onClick={toggle}>
+        {isToggle && <Complete />}
+      </div>
     </div>
   );
 };

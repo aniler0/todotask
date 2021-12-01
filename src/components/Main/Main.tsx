@@ -1,43 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 
-import { useAppSelector } from "store";
+import { loadState, Todo } from "store/todoSlice";
 import { Input, Task } from "components";
-import { monthNames } from "constants/months";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
+import { monthNames } from "constants/dates";
 
 const Main = () => {
-  const todos = useAppSelector((state) => state.todos);
-  const [startDate, setStartDate] = useState(new Date());
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [calendarDate, setCalendarDate] = useState(new Date());
   const [datePickerShow, setDatePickerShow] = useState(false);
 
   const onDragEnd = (res: any) => {
     if (!res.destination) return;
   };
+  const dateMonthYear = `${calendarDate.getDate()}/${calendarDate.getMonth()}/${calendarDate.getFullYear()}`;
+
+  useEffect(() => {
+    setTodos(loadState());
+  }, []);
+
   return (
     <div className="main">
       <div className="main__Container">
         <div className="main__Date">
           {datePickerShow ? (
             <DatePicker
-              selected={startDate}
+              selected={calendarDate}
               dateFormat="d MMMM yyyy"
               inline
-              onChange={(date: any) => {
-                setStartDate(date);
-                console.log(startDate);
+              onChange={(date: Date) => {
+                setCalendarDate(date);
                 setDatePickerShow(false);
+                setTodos(loadState());
               }}
             />
           ) : (
             <div className="date" onClick={() => setDatePickerShow(true)}>
-              <div className="day">{startDate.getUTCDate()}</div>
+              <div className="day">{calendarDate.getDate()}</div>
               <div className="month-year">
-                <span>{monthNames[startDate.getMonth()]}</span>
-                <span>{startDate.getUTCFullYear()}</span>
+                <span>{monthNames[calendarDate.getMonth()]}</span>
+                <span>{calendarDate.getFullYear()}</span>
               </div>
             </div>
           )}
@@ -51,26 +57,34 @@ const Main = () => {
                 ref={provided.innerRef}
                 className="main__Todos"
               >
-                {todos.map((todo, key) => (
-                  <Draggable key={todo.id} draggableId={todo.id} index={key}>
-                    {(provided) => (
-                      <div
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps.style}
-                      >
-                        <Task todo={todo} key={key} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+                {todos
+                  ?.filter(
+                    (filteredTodo) => filteredTodo.date === dateMonthYear
+                  )
+                  .map((todo, key) => (
+                    <Draggable key={todo.id} draggableId={todo.id} index={key}>
+                      {(provided) => (
+                        <div
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps.style}
+                        >
+                          <Task todo={todo} key={key} />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
               </div>
             )}
           </Droppable>
         </DragDropContext>
         <div className="main__AddTask">
-          <Input placeholder="+New" startDate={startDate} />
+          <Input
+            placeholder="+ New"
+            calendarDate={calendarDate}
+            setTodos={setTodos}
+          />
         </div>
       </div>
     </div>

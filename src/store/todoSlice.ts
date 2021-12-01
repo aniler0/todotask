@@ -6,7 +6,7 @@ export interface Todo {
   id: string;
   name: string;
   completed: boolean;
-  date: Number;
+  date: string;
 }
 
 const initialState: Todo[] = [];
@@ -22,6 +22,7 @@ const todoSlice = createSlice({
 
     setTodo: (state, action: PayloadAction<Todo[]>) => {
       state = action.payload;
+      console.log(action.payload);
       saveState(state);
     },
   },
@@ -31,26 +32,27 @@ export default todoSlice.reducer;
 export const { addTodo, setTodo } = todoSlice.actions;
 
 export const addTask =
-  (task: string, startDate: Date) => async (dispatch: AppDispatch) => {
+  (task: string, startDate: string) => async (dispatch: AppDispatch) => {
     const newTodo: Todo = {
       id: uuid(),
       name: task,
       completed: false,
-      date: startDate.getUTCDay(),
+      date: startDate,
     };
     dispatch(addTodo(newTodo));
   };
 
 export const updateTask =
   (todos: Todo[], task: Todo) => async (dispatch: AppDispatch) => {
+    console.log(task);
+    console.log(todos);
     const newTodoState = [...todos];
     newTodoState.forEach((todo, index) => {
       if (todo.id === task.id) {
-        const todoToUpdate = { ...task };
-        newTodoState[index] = todoToUpdate;
+        // const todoToUpdate = { ...task };
+        newTodoState[index] = task;
       }
     });
-
     dispatch(setTodo(newTodoState));
   };
 
