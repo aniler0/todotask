@@ -13,14 +13,13 @@ import "styles/home.scss";
 const Home = () => {
   const todosSelector = useAppSelector((state) => state.todos);
   const dispatch = useAppDispatch();
-
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [datePickerShow, setDatePickerShow] = useState(false);
 
   const dateMonthYear = `${calendarDate.getDate()}/${calendarDate.getMonth()}/${calendarDate.getFullYear()}`;
 
   useEffect(() => {
-    if (loadState !== undefined) {
+    if (loadState() !== undefined) {
       //if there is data in localstore checks and adds in redux state
       loadState()?.map((elm: Todo) => dispatch(addTodo(elm)));
     }
@@ -29,11 +28,14 @@ const Home = () => {
   useEffect(() => {
     saveState(todosSelector);
   });
+
   function handleOnDragEnd(result: any) {
-    if (todosSelector !== undefined) {
-      const items = Array.from(todosSelector);
+    if (loadState() !== undefined) {
+      const items = Array.from(loadState());
       const [reorderedItem] = items.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, reorderedItem);
+
+      saveState(items);
     }
   }
 

@@ -1,15 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import useDoubleClick from "use-double-click";
 
 import Complete from "assets/Complete";
-import { useAppDispatch, useAppSelector } from "store";
-import {
-  addTask,
-  saveState,
-  setToggle,
-  Todo,
-  updateTodo,
-} from "store/todoSlice";
+import { useAppDispatch } from "store";
+import { addTask, setToggle, Todo, updateTodo } from "store/todoSlice";
 
 import "./style.scss";
 
@@ -23,7 +17,6 @@ type InputType = {
 
 const Input = ({ placeholder, calendarDate, edit, todo }: InputType) => {
   const dispatch = useAppDispatch();
-  const selector = useAppSelector((state) => state.todos);
   const [taskName, setTaskName] = useState(todo ? todo.name : "");
   const [isToggle, setIsToggle] = useState<boolean>(
     todo ? todo.completed : false
