@@ -1,17 +1,10 @@
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
-import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 
 import { Input } from "components";
 import { useAppSelector, useAppDispatch } from "store";
 import { monthNames } from "constants/dates";
-import todoSlice, {
-  Todo,
-  loadState,
-  addTodo,
-  saveState,
-  orderedTodo,
-} from "store/todoSlice";
+import { saveState } from "store/todoSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "styles/home.scss";
@@ -26,9 +19,10 @@ const Home = () => {
 
   useEffect(() => {
     saveState(todosSelector);
+    console.log(todosSelector);
   });
 
-  function handleOnDragEnd(result: any) {
+  /* function handleOnDragEnd(result: any) {
     if (todosSelector) {
       const items = Array.from(todosSelector);
       const [reorderedItem] = items.splice(result.source.index, 1);
@@ -38,7 +32,7 @@ const Home = () => {
         dispatch(orderedTodo(items));
       }
     }
-  }
+  }*/
 
   return (
     <div className="main">
@@ -73,37 +67,11 @@ const Home = () => {
           )}
         </div>
 
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Droppable droppableId="main__Todos">
-            {(provided) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                className="main__Todos"
-              >
-                {todosSelector
-                  .filter(
-                    (filteredTodo: Todo) => filteredTodo.date === dateMonthYear //if dates are equal lists tasks which date is equal with calendar
-                  )
-                  .map((todo: Todo, key: number) => (
-                    <Draggable key={todo.id} draggableId={todo.id} index={key}>
-                      {(provided) => (
-                        <div
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          ref={provided.innerRef}
-                          {...provided.draggableProps.style}
-                        >
-                          <Input edit todo={todo} key={key} />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+        {todosSelector?.map((selectedTasks, key) =>
+          selectedTasks?.todos.map((task, key) => (
+            <Input key={key} task={task} edit />
+          ))
+        )}
         <div className="main__AddTask">
           <Input placeholder="+ New" calendarDate={calendarDate} />
         </div>

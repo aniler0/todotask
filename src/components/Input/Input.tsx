@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 import useDoubleClick from "use-double-click";
 
 import Complete from "assets/Complete";
-import { useAppDispatch } from "store";
-import { addTask, setToggle, Todo, updateTodo } from "store/todoSlice";
+import { useAppDispatch, useAppSelector } from "store";
+import { addTask, Task } from "store/todoSlice";
 
 import "./style.scss";
 
@@ -12,14 +12,15 @@ type InputType = {
   calendarDate?: Date;
   setTodos?: any;
   edit?: boolean;
-  todo?: Todo | undefined;
+  task?: Task | undefined;
 };
 
-const Input = ({ placeholder, calendarDate, edit, todo }: InputType) => {
+const Input = ({ placeholder, calendarDate, edit, task }: InputType) => {
+  const todos = useAppSelector((state) => state.todos);
   const dispatch = useAppDispatch();
-  const [taskName, setTaskName] = useState(todo ? todo.name : "");
+  const [taskName, setTaskName] = useState(task ? task.name : "");
   const [isToggle, setIsToggle] = useState<boolean>(
-    todo ? todo.completed : false
+    task ? task.completed : false
   );
   const [isDoubleClicked, setIsDoubleClicked] = useState<boolean>(false);
   const inputRef = useRef(null);
@@ -27,21 +28,18 @@ const Input = ({ placeholder, calendarDate, edit, todo }: InputType) => {
   const dateMonthYear = `${calendarDate?.getDate()}/${calendarDate?.getMonth()}/${calendarDate?.getFullYear()}`;
 
   const handleSubmit = (e: any) => {
-    e.preventDefault();
-
-    if (edit && todo) {
-      const newTodo = { ...todo, name: taskName };
-      dispatch(updateTodo(newTodo));
-      setIsDoubleClicked(!isDoubleClicked);
-    } else {
-      dispatch(addTask(taskName, dateMonthYear));
-      setTaskName("");
+    if (task !== undefined) {
+      dispatch(addTask(todos, taskName, dateMonthYear));
     }
+
+    dispatch(addTask(todos, taskName, dateMonthYear));
+    setTaskName("");
+    e.preventDefault();
   };
 
   const toggle = () => {
-    if (todo !== undefined) {
-      dispatch(setToggle(todo.id));
+    if (task !== undefined) {
+      //dispatch(setToggle(todo.id));
     }
     setIsToggle(!isToggle);
   };
@@ -86,7 +84,7 @@ const Input = ({ placeholder, calendarDate, edit, todo }: InputType) => {
       </form>
 
       {edit ? (
-        todo !== undefined && isToggle ? (
+        task !== undefined && isToggle ? (
           <div className="checked" onClick={toggle}>
             <Complete />
           </div>
