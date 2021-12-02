@@ -5,7 +5,13 @@ import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 import { Input } from "components";
 import { useAppSelector, useAppDispatch } from "store";
 import { monthNames } from "constants/dates";
-import { Todo, loadState, addTodo, saveState } from "store/todoSlice";
+import todoSlice, {
+  Todo,
+  loadState,
+  addTodo,
+  saveState,
+  orderedTodo,
+} from "store/todoSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "styles/home.scss";
@@ -19,23 +25,18 @@ const Home = () => {
   const dateMonthYear = `${calendarDate.getDate()}/${calendarDate.getMonth()}/${calendarDate.getFullYear()}`;
 
   useEffect(() => {
-    if (loadState() !== undefined) {
-      //if there is data in localstore checks and adds in redux state
-      loadState()?.map((elm: Todo) => dispatch(addTodo(elm)));
-    }
-  }, []);
-
-  useEffect(() => {
     saveState(todosSelector);
   });
 
   function handleOnDragEnd(result: any) {
-    if (loadState() !== undefined) {
-      const items = Array.from(loadState());
+    if (todosSelector) {
+      const items = Array.from(todosSelector);
       const [reorderedItem] = items.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, reorderedItem);
-
       saveState(items);
+      if (items !== undefined) {
+        dispatch(orderedTodo(items));
+      }
     }
   }
 

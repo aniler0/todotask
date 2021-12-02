@@ -9,7 +9,8 @@ export interface Todo {
   date: string;
 }
 
-const initialState: Todo[] = [];
+const initialState: Todo[] =
+  JSON.parse(localStorage.getItem("state") || "[]") || [];
 
 const todoSlice = createSlice({
   name: "todos",
@@ -34,11 +35,15 @@ const todoSlice = createSlice({
           : todo
       );
     },
+    orderedTodo: (state, action: PayloadAction<Todo[]>) => {
+      return (state = action.payload);
+    },
   },
 });
 
 export default todoSlice.reducer;
-export const { addTodo, updateTodo, setToggle } = todoSlice.actions;
+export const { addTodo, updateTodo, setToggle, orderedTodo } =
+  todoSlice.actions;
 
 export const addTask =
   (task: string, startDate: string) => async (dispatch: AppDispatch) => {
