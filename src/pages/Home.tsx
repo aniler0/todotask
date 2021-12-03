@@ -17,7 +17,9 @@ const Home = () => {
 
   const dateMonthYear = `${calendarDate.getDate()}/${calendarDate.getMonth()}/${calendarDate.getFullYear()}`;
 
-  useEffect(() => {});
+  useEffect(() => {
+    saveState(todosSelector);
+  });
 
   /* function handleOnDragEnd(result: any) {
     if (todosSelector) {
@@ -68,7 +70,7 @@ const Home = () => {
           (selectedTasks, key) =>
             selectedTasks?.date === dateMonthYear &&
             selectedTasks.todos.map((task, key) => (
-              <Input key={key} task={task} edit />
+              <Input key={key} task={task} edit calendarDate={calendarDate} />
             ))
         )}
         <div className="main__AddTask">

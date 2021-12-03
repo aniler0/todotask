@@ -3,7 +3,7 @@ import useDoubleClick from "use-double-click";
 
 import Complete from "assets/Complete";
 import { useAppDispatch, useAppSelector } from "store";
-import { addTask, Task } from "store/todoSlice";
+import { addTask, Day, Task, updateTask } from "store/todoSlice";
 
 import "./style.scss";
 
@@ -30,16 +30,19 @@ const Input = ({ placeholder, calendarDate, edit, task }: InputType) => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     if (task !== undefined) {
+      const updatedTask: Task = { ...task, name: taskName };
+      dispatch(updateTask(todos.days, updatedTask, dateMonthYear));
+      setIsDoubleClicked(false);
+    } else {
       dispatch(addTask(todos.days, taskName, dateMonthYear));
+      setTaskName("");
     }
-
-    dispatch(addTask(todos.days, taskName, dateMonthYear));
-    setTaskName("");
   };
 
   const toggle = () => {
     if (task !== undefined) {
-      //dispatch(setToggle(todo.id));
+      const updatedTask: Task = { ...task, completed: !task.completed };
+      dispatch(updateTask(todos.days, updatedTask, dateMonthYear));
     }
     setIsToggle(!isToggle);
   };

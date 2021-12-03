@@ -16,7 +16,9 @@ export interface Root {
   days: Day[];
 }
 
-const initialState: Root = {
+const initialState: Root = JSON.parse(
+  localStorage.getItem("state") || "[]"
+) || {
   days: [
     {
       date: `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`,
@@ -32,24 +34,14 @@ const todoSlice = createSlice({
     setTodo: (state, action: PayloadAction<Day[]>) => {
       state.days = action.payload;
     },
-
-    /*updateTodo: (state, action: PayloadAction<Task>) => {
-      return state.map((todo, key) =>
-        todo.tasks.map((task:Task,key)=>task.id === action.payload.id ? {...task, name:task.name } : task )
-      );
+    updateTodo: (state, action: PayloadAction<Day[]>) => {
+      state.days = action.payload;
     },
-    setToggle: (state, action: PayloadAction<string>) => {
-      return state.map((todo, key) =>
-        todo.id === action.payload
-          ? { ...todo, completed: !todo.completed }
-          : todo
-      );
-    },*/
   },
 });
 
 export default todoSlice.reducer;
-export const { setTodo } = todoSlice.actions;
+export const { setTodo, updateTodo } = todoSlice.actions;
 
 export const addTask =
   (todos: Day[], taskName: string, date: string) =>
@@ -81,6 +73,29 @@ export const addTask =
       dispatch(setTodo(copiedTodos));
     }
   };
+
+export const updateTask =
+  (todos: Day[], updatedTask: Task, date: string) =>
+  async (dispatch: AppDispatch) => {
+    const copiedTodos = [...todos];
+    //[{date,todos:[{id}]},{date,todos:[{id},{id}]}]
+    copiedTodos.forEach((copiedTodo, index) => {
+      const newDay = { ...copiedTodo };
+      if (copiedTodo.date === date) {
+        copiedTodo.todos.forEach((todo, index) => {
+          if (todo.id === updatedTask.id) {
+            const newCopiedTasks = [...copiedTodo.todos];
+            newCopiedTasks[index] = updatedTask;
+            newDay.todos = newCopiedTasks;
+          }
+        });
+        copiedTodos[index] = newDay;
+      }
+    });
+
+    dispatch(updateTodo(copiedTodos));
+  };
+
 export async function saveState(state: any) {
   try {
     const serializedState = JSON.stringify(state);
