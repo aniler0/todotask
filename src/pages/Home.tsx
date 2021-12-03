@@ -17,10 +17,7 @@ const Home = () => {
 
   const dateMonthYear = `${calendarDate.getDate()}/${calendarDate.getMonth()}/${calendarDate.getFullYear()}`;
 
-  useEffect(() => {
-    saveState(todosSelector);
-    console.log(todosSelector);
-  });
+  useEffect(() => {});
 
   /* function handleOnDragEnd(result: any) {
     if (todosSelector) {

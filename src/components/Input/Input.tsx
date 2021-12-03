@@ -28,13 +28,14 @@ const Input = ({ placeholder, calendarDate, edit, task }: InputType) => {
   const dateMonthYear = `${calendarDate?.getDate()}/${calendarDate?.getMonth()}/${calendarDate?.getFullYear()}`;
 
   const handleSubmit = (e: any) => {
+    e.preventDefault();
     if (task !== undefined) {
       dispatch(addTask(todos, taskName, dateMonthYear));
     }
 
     dispatch(addTask(todos, taskName, dateMonthYear));
     setTaskName("");
-    e.preventDefault();
+    console.log(todos);
   };
 
   const toggle = () => {

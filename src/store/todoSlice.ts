@@ -9,20 +9,23 @@ export interface Task {
 }
 
 export interface Day {
-  date: string;
+  date: string | undefined;
   todos: Task[];
 }
 
-const initialState: Day[] =
-  JSON.parse(localStorage.getItem("state") || "[]") || [];
-
+const initialState: Day[] = [
+  {
+    date: `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`,
+    todos: [],
+  },
+];
 const todoSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
     setTodo: (state, action: PayloadAction<Day[]>) => {
-      console.log(action.payload);
       state = action.payload;
+      console.log(state);
     },
 
     /*updateTodo: (state, action: PayloadAction<Task>) => {
@@ -46,32 +49,20 @@ export const { setTodo } = todoSlice.actions;
 export const addTask =
   (todos: Day[], taskName: string, date: string) =>
   async (dispatch: AppDispatch) => {
-    const copiedTodos = [
-      ...todos,
-      {
-        date,
-        todos: [],
-      },
-    ];
-
-    copiedTodos.map((copiedTodo, key) => {
+    const copiedTodos = [...todos];
+    copiedTodos.forEach((copiedTodo, index) => {
       if (copiedTodo.date === date) {
-        const newTask: Task = { id: uuid(), name: taskName, completed: false };
-        copiedTodo.todos.push(newTask);
-        copiedTodos.push(copiedTodo);
-        dispatch(setTodo(copiedTodos));
-      } else {
-        const newDay: Day = {
-          date: date,
-          todos: [{ id: uuid(), name: taskName, completed: false }],
-        };
-        copiedTodos.push(newDay);
-        console.log(copiedTodos);
-        dispatch(setTodo(copiedTodos));
+        const newDay = { ...copiedTodo };
+
+        newDay.todos = [
+          ...newDay.todos,
+          { id: uuid(), name: taskName, completed: false },
+        ];
+        copiedTodos[index] = newDay;
       }
     });
+    dispatch(setTodo(copiedTodos));
   };
-
 export async function saveState(state: any) {
   try {
     const serializedState = JSON.stringify(state);
