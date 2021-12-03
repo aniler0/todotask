@@ -30,12 +30,11 @@ const Input = ({ placeholder, calendarDate, edit, task }: InputType) => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     if (task !== undefined) {
-      dispatch(addTask(todos, taskName, dateMonthYear));
+      dispatch(addTask(todos.days, taskName, dateMonthYear));
     }
 
-    dispatch(addTask(todos, taskName, dateMonthYear));
+    dispatch(addTask(todos.days, taskName, dateMonthYear));
     setTaskName("");
-    console.log(todos);
   };
 
   const toggle = () => {

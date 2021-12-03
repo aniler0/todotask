@@ -12,20 +12,25 @@ export interface Day {
   date: string | undefined;
   todos: Task[];
 }
+export interface Root {
+  days: Day[];
+}
 
-const initialState: Day[] = [
-  {
-    date: `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`,
-    todos: [],
-  },
-];
+const initialState: Root = {
+  days: [
+    {
+      date: `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`,
+      todos: [],
+    },
+  ],
+};
+
 const todoSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
     setTodo: (state, action: PayloadAction<Day[]>) => {
-      state = action.payload;
-      console.log(state);
+      state.days = action.payload;
     },
 
     /*updateTodo: (state, action: PayloadAction<Task>) => {
@@ -50,18 +55,31 @@ export const addTask =
   (todos: Day[], taskName: string, date: string) =>
   async (dispatch: AppDispatch) => {
     const copiedTodos = [...todos];
-    copiedTodos.forEach((copiedTodo, index) => {
-      if (copiedTodo.date === date) {
-        const newDay = { ...copiedTodo };
+    const isDateExist = copiedTodos.find(
+      (copiedTodo) => copiedTodo.date === date
+    );
+    if (isDateExist) {
+      copiedTodos.forEach((copiedTodo, index) => {
+        if (copiedTodo.date === date) {
+          const newDay = { ...copiedTodo };
 
-        newDay.todos = [
-          ...newDay.todos,
-          { id: uuid(), name: taskName, completed: false },
-        ];
-        copiedTodos[index] = newDay;
-      }
-    });
-    dispatch(setTodo(copiedTodos));
+          newDay.todos = [
+            ...newDay.todos,
+            { id: uuid(), name: taskName, completed: false },
+          ];
+          copiedTodos[index] = newDay;
+        }
+      });
+
+      dispatch(setTodo(copiedTodos));
+    } else {
+      const newDay: Day = {
+        date: date,
+        todos: [{ id: uuid(), name: taskName, completed: false }],
+      };
+      copiedTodos.push(newDay);
+      dispatch(setTodo(copiedTodos));
+    }
   };
 export async function saveState(state: any) {
   try {

@@ -64,10 +64,12 @@ const Home = () => {
           )}
         </div>
 
-        {todosSelector?.map((selectedTasks, key) =>
-          selectedTasks?.todos.map((task, key) => (
-            <Input key={key} task={task} edit />
-          ))
+        {todosSelector?.days.map(
+          (selectedTasks, key) =>
+            selectedTasks?.date === dateMonthYear &&
+            selectedTasks.todos.map((task, key) => (
+              <Input key={key} task={task} edit />
+            ))
         )}
         <div className="main__AddTask">
           <Input placeholder="+ New" calendarDate={calendarDate} />
