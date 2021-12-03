@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import { Input } from "components";
 import { useAppSelector, useAppDispatch } from "store";
 import { monthNames } from "constants/dates";
-import { orderTodo, saveState } from "store/todoSlice";
+import { loadState, orderTodo, saveState } from "store/todoSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "styles/home.scss";
