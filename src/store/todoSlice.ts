@@ -16,9 +16,7 @@ export interface Root {
   days: Day[];
 }
 
-const initialState: Root = JSON.parse(
-  localStorage.getItem("state") || "[]"
-) || {
+const initialState: Root = {
   days: [
     {
       date: `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`,

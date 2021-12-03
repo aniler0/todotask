@@ -75,7 +75,7 @@ const Home = () => {
                 ref={provided.innerRef}
                 className="main__Todos"
               >
-                {todosSelector?.days.map(
+                {todosSelector?.days?.map(
                   (selectedTasks, key) =>
                     selectedTasks?.date === dateMonthYear &&
                     selectedTasks.todos.map((task, key) => (
