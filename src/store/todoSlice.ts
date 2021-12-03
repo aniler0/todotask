@@ -37,11 +37,14 @@ const todoSlice = createSlice({
     updateTodo: (state, action: PayloadAction<Day[]>) => {
       state.days = action.payload;
     },
+    setTodoOrder: (state, action: PayloadAction<Day[]>) => {
+      state.days = action.payload;
+    },
   },
 });
 
 export default todoSlice.reducer;
-export const { setTodo, updateTodo } = todoSlice.actions;
+export const { setTodo, updateTodo, setTodoOrder } = todoSlice.actions;
 
 export const addTask =
   (todos: Day[], taskName: string, date: string) =>
@@ -94,6 +97,22 @@ export const updateTask =
     });
 
     dispatch(updateTodo(copiedTodos));
+  };
+export const orderTodo =
+  (todos: Day[], orderedTasks: Task[], date: string) =>
+  async (dispatch: AppDispatch) => {
+    const copiedTodos = [...todos];
+
+    copiedTodos.forEach((copiedTodo, index) => {
+      const newDay = { ...copiedTodo };
+      if (copiedTodo.date === date) {
+        newDay.todos = orderedTasks;
+
+        copiedTodos[index] = newDay;
+      }
+    });
+
+    dispatch(setTodoOrder(copiedTodos));
   };
 
 export async function saveState(state: any) {

@@ -3,7 +3,7 @@ import useDoubleClick from "use-double-click";
 
 import Complete from "assets/Complete";
 import { useAppDispatch, useAppSelector } from "store";
-import { addTask, Day, Task, updateTask } from "store/todoSlice";
+import { addTask, Task, updateTask } from "store/todoSlice";
 
 import "./style.scss";
 

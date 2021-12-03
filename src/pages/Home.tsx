@@ -4,10 +4,11 @@ import DatePicker from "react-datepicker";
 import { Input } from "components";
 import { useAppSelector, useAppDispatch } from "store";
 import { monthNames } from "constants/dates";
-import { saveState } from "store/todoSlice";
+import { orderTodo, saveState } from "store/todoSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "styles/home.scss";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const Home = () => {
   const todosSelector = useAppSelector((state) => state.todos);
@@ -19,19 +20,20 @@ const Home = () => {
 
   useEffect(() => {
     saveState(todosSelector);
-  });
+  }, [todosSelector]);
 
-  /* function handleOnDragEnd(result: any) {
-    if (todosSelector) {
-      const items = Array.from(todosSelector);
-      const [reorderedItem] = items.splice(result.source.index, 1);
-      items.splice(result.destination.index, 0, reorderedItem);
-      saveState(items);
-      if (items !== undefined) {
-        dispatch(orderedTodo(items));
+  function handleOnDragEnd(result: any) {
+    todosSelector.days.forEach((todos, index) => {
+      if (todos.date === dateMonthYear) {
+        const items = Array.from(todos.todos);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        if (items !== undefined) {
+          dispatch(orderTodo(todosSelector.days, items, dateMonthYear));
+        }
       }
-    }
-  }*/
+    });
+  }
 
   return (
     <div className="main">
@@ -65,14 +67,45 @@ const Home = () => {
             </div>
           )}
         </div>
-
-        {todosSelector?.days.map(
-          (selectedTasks, key) =>
-            selectedTasks?.date === dateMonthYear &&
-            selectedTasks.todos.map((task, key) => (
-              <Input key={key} task={task} edit calendarDate={calendarDate} />
-            ))
-        )}
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId="main__Todos">
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="main__Todos"
+              >
+                {todosSelector?.days.map(
+                  (selectedTasks, key) =>
+                    selectedTasks?.date === dateMonthYear &&
+                    selectedTasks.todos.map((task, key) => (
+                      <Draggable
+                        key={task.id}
+                        draggableId={task.id}
+                        index={key}
+                      >
+                        {(provided) => (
+                          <div
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps.style}
+                          >
+                            <Input
+                              key={key}
+                              task={task}
+                              edit
+                              calendarDate={calendarDate}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))
+                )}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
         <div className="main__AddTask">
           <Input placeholder="+ New" calendarDate={calendarDate} />
         </div>
