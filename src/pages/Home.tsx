@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import DatePicker from "react-datepicker";
 
 import { Input } from "components";
@@ -8,7 +9,6 @@ import { orderTodo, saveState } from "store/todoSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "styles/home.scss";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const Home = () => {
   const todosSelector = useAppSelector((state) => state.todos);
