@@ -1,9 +1,9 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import { Input } from "components";
 import { Provider } from "react-redux";
 import { store } from "store";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom";
+import { Input } from "components";
 
 const AddTaskInput = () => {
   return render(
@@ -26,33 +26,40 @@ const SeeTaskInput = () => {
   );
 };
 
-test("empty input field", async () => {
+test("input component which is used to add task", async () => {
   AddTaskInput();
   //Is the inputfield empty?
   const inputField = screen.getByTestId("adding-task-input");
   expect(inputField).toHaveValue("");
 });
 
-test("seeing tasks on task area", async () => {
-  SeeTaskInput();
-  //Is the name displayed to users?
-  const taskname = screen.getByRole("heading");
-  expect(taskname).toHaveTextContent(/mock/i);
-  //what happens when double click on the task container ?
-  const taskContainer = screen.getByTestId("task-div");
-  userEvent.dblClick(taskContainer);
-
-  await waitFor(() => {
-    expect(screen.getByTestId("seeing-task-input")).toBeInTheDocument();
-    //Is the inputfield has a value?
-    const inputField = screen.getByTestId("seeing-task-input");
-    expect(inputField).toHaveValue("mock");
+describe("input component which is used as added task", () => {
+  beforeEach(() => {
+    SeeTaskInput();
   });
 
-  //what happens when click to toggle button ?
-  const toggleArea = screen.getByTestId("notChecked");
-  userEvent.click(toggleArea);
-  await waitFor(() => {
-    expect(screen.getByTestId("checked")).toBeInTheDocument();
+  test("Is the taskname displayed to users?", async () => {
+    const taskname = screen.getByRole("heading");
+    expect(taskname).toHaveTextContent(/mock/i);
+  });
+
+  test("what happens when double click on the task container ?", async () => {
+    const taskContainer = screen.getByTestId("task-div");
+    userEvent.dblClick(taskContainer);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("seeing-task-input")).toBeInTheDocument();
+      //Is the inputfield has a value?
+      const inputField = screen.getByTestId("seeing-task-input");
+      expect(inputField).toHaveValue("mock");
+    });
+  });
+
+  test("what happens when click to toggle button ?", async () => {
+    const toggleArea = screen.getByTestId("notChecked");
+    userEvent.click(toggleArea);
+    await waitFor(() => {
+      expect(screen.getByTestId("checked")).toBeInTheDocument();
+    });
   });
 });
