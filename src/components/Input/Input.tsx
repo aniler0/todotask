@@ -57,6 +57,7 @@ const Input = ({ placeholder, calendarDate, edit, task }: InputType) => {
 
   return (
     <div
+      data-testid="task-div"
       ref={inputRef}
       className={!edit ? "input__Container" : `task__Container`}
     >
@@ -64,16 +65,20 @@ const Input = ({ placeholder, calendarDate, edit, task }: InputType) => {
         {edit ? (
           isDoubleClicked ? (
             <input
+              data-testid="seeing-task-input"
               required
               autoFocus={isDoubleClicked}
               value={taskName}
               onChange={(e) => setTaskName(e.currentTarget.value)}
             />
           ) : (
-            <h1 className="task">{taskName}</h1>
+            <h1 data-testid="taskname" className="task">
+              {taskName}
+            </h1>
           )
         ) : (
           <input
+            data-testid="adding-task-input"
             required
             className="input"
             placeholder={placeholder}
@@ -88,11 +93,15 @@ const Input = ({ placeholder, calendarDate, edit, task }: InputType) => {
 
       {edit ? (
         task !== undefined && isToggle ? (
-          <div className="checked" onClick={toggle}>
+          <div data-testid="checked" className="checked" onClick={toggle}>
             <Complete />
           </div>
         ) : (
-          <div className="notChecked" onClick={toggle}></div>
+          <div
+            data-testid="notChecked"
+            className="notChecked"
+            onClick={toggle}
+          ></div>
         )
       ) : null}
     </div>
