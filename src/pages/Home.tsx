@@ -41,6 +41,7 @@ const Home = () => {
         <div className="main__Date">
           {datePickerShow ? (
             <DatePicker
+              data-testid="calendar"
               selected={calendarDate}
               dateFormat="d MMMM yyyy"
               inline
@@ -51,7 +52,11 @@ const Home = () => {
             />
           ) : (
             <div className="dates">
-              <div className="date" onClick={() => setDatePickerShow(true)}>
+              <div
+                data-testid="date-month-year"
+                className="date"
+                onClick={() => setDatePickerShow(true)}
+              >
                 <div className="day">{calendarDate.getDate()}</div>
                 <div className="month-year">
                   <span>{monthNames[calendarDate.getMonth()]}</span>
