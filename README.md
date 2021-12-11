@@ -6,7 +6,7 @@ The project is used to add tasks by date.
 ## Technologies
 
 **Client:** Typescript,React, Redux Toolkit, SCSS
-**Packages**: Axios, react-tinder-card, React Datepicker
+**Packages**: React Datepicker
 
 
 
