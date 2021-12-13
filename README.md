@@ -2,7 +2,12 @@
 
 The project is used to add tasks by date. 
 
+## Screenshot
+
+![Screenshot](https://github.com/aniler0/todotask/blob/master/public/Screenshot_1.png)
+
   
+
 ## Technologies
 
 **Client:** Typescript,React, Redux Toolkit, SCSS
